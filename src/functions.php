@@ -274,8 +274,13 @@ function describe_type($input)
 function default_http_handler()
 {
     $version = guzzle_major_version();
-    // If Guzzle 6 or 7 installed
-    if ($version === 6 || $version === 7) {
+    // If Guzzle 7 installed
+    if ($version === 7) {
+        return new \Aws\Handler\GuzzleV7\GuzzleHandler();
+    }
+    
+    // If Guzzle 6 installed
+    if ($version === 6) {
         return new \Aws\Handler\GuzzleV6\GuzzleHandler();
     }
 
@@ -295,8 +300,13 @@ function default_http_handler()
 function default_user_agent()
 {
     $version = guzzle_major_version();
-    // If Guzzle 6 or 7 installed
-    if ($version === 6 || $version === 7) {
+    // If Guzzle 7 installed
+    if ($version === 7) {
+        return \GuzzleHttp\Utils::defaultUserAgent();
+    }
+    
+    // If Guzzle 6 installed
+    if ($version === 6) {
         return \GuzzleHttp\default_user_agent();
     }
 
@@ -324,6 +334,9 @@ function guzzle_major_version()
 
     if (defined('\GuzzleHttp\ClientInterface::VERSION')) {
         $version = (string) ClientInterface::VERSION;
+        if ($version[0] === '7') {
+            return $cache = 7;
+        }
         if ($version[0] === '6') {
             return $cache = 6;
         }
